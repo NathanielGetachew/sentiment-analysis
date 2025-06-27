@@ -1,0 +1,6 @@
+setnvenv/
+*.pyc
+__pycache__/
+data/imdb_subset.csv
+data
+models/*.pkl
