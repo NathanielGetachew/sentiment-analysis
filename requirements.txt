@@ -1,0 +1,8 @@
+pandas
+scikit-learn
+joblib
+numpy
+flask
+datasets
+joblib
+beautifulsoup4
