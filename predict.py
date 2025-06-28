@@ -2,6 +2,7 @@ import sys
 import joblib
 from bs4 import BeautifulSoup
 import re
+from model import ProgressLogisticRegression
 
 def clean_text(text):
     """Remove HTML tags and special characters from text."""

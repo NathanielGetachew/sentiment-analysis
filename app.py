@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 import joblib
 from bs4 import BeautifulSoup
 import re
+from model import ProgressLogisticRegression
 
 app = Flask(__name__)
 

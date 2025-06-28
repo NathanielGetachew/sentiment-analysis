@@ -1,11 +1,12 @@
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
 from bs4 import BeautifulSoup
 import re
 import joblib
+from tqdm import tqdm
+from model import ProgressLogisticRegression
 
 def clean_text(text):
     """Remove HTML tags and special characters from text."""
@@ -15,23 +16,32 @@ def clean_text(text):
 
 def train_model():
     # Load data
-    df = pd.read_csv('data/imdb_subset.csv')
-    df['review'] = df['review'].apply(clean_text)  # Clean reviews
+    print("Loading dataset...")
+    df = pd.read_csv('data/imdb_full.csv')
+    print(f"Dataset size: {len(df)} samples")
+    
+    # Clean reviews with progress bar
+    tqdm.pandas()
+    df['review'] = df['review'].progress_apply(clean_text)
     reviews, sentiments = df['review'].values, df['sentiment'].values
     
     # Split data
+    print("Splitting data...")
     X_train, X_test, y_train, y_test = train_test_split(reviews, sentiments, test_size=0.2, random_state=42)
     
-    # Vectorize text
-    vectorizer = TfidfVectorizer(max_features=5000, stop_words='english')
-    X_train_tfidf = vectorizer.fit_transform(X_train)
-    X_test_tfidf = vectorizer.transform(X_test)
+    # Vectorize text with progress bar
+    print("Vectorizing text...")
+    vectorizer = TfidfVectorizer(max_features=10000, stop_words='english')
+    X_train_tfidf = vectorizer.fit_transform(tqdm(X_train, desc="Transforming train data"))
+    X_test_tfidf = vectorizer.transform(tqdm(X_test, desc="Transforming test data"))
     
-    # Train model
-    model = LogisticRegression(max_iter=1000, solver='lbfgs', C=1.0)
+    # Train model with progress bar
+    print("Training model...")
+    model = ProgressLogisticRegression(max_iter=1000, solver='lbfgs', C=1.0)
     model.fit(X_train_tfidf, y_train)
     
     # Evaluate
+    print("Evaluating model...")
     y_pred = model.predict(X_test_tfidf)
     print(f"Accuracy: {accuracy_score(y_test, y_pred):.4f}")
     print("\nClassification Report:")
