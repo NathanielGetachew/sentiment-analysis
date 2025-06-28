@@ -125,7 +125,7 @@ JSON
 Note: Use single quotes for JSON data in Bash to avoid issues with special characters like !.
 
 ## Project Structure
-
+```bash
 .
 ├── data/
 │ └── imdb_full.csv
@@ -140,6 +140,7 @@ Note: Use single quotes for JSON data in Bash to avoid issues with special chara
 ├── model.py
 └── README.md
 ├── Dockerfile
+```
 data/imdb_full.csv: The prepared full dataset.
 
 models/model.pkl: The trained Logistic Regression model.
